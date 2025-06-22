@@ -4,15 +4,12 @@ import random
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-# Load environment variables
 username = os.environ['LEETCODE_USERNAME']
 chat_id = os.environ['CHAT_ID']
 token = os.environ['TELEGRAM_TOKEN']
 
-# Telegram API URL
 TELEGRAM_API_URL = f"https://api.telegram.org/bot{token}/sendMessage"
 
-# Motivational messages
 success_messages = [
     "✅ Beast mode active. You’ve submitted today. Keep the streak alive! 🔥",
     "🧠 Brains > excuses. You're winning this grind.",
@@ -22,38 +19,58 @@ success_messages = [
     "👊 You're in the 1% who showed up. Respect!"
 ]
 
-# Warning message
 warning_message = "⚠️ Utkarsh! You haven’t submitted on LeetCode today. Clock’s ticking! ⏰🔥"
 
-# Function to check if today's submission is made
 def has_submitted_today(username):
-    url = f"https://leetcode-stats-api.herokuapp.com/{username}"
-    response = requests.get(url)
+    url = "https://leetcode.com/graphql"
+    headers = {
+        "Content-Type": "application/json",
+        "Referer": f"https://leetcode.com/{username}/",
+        "User-Agent": "Mozilla/5.0"
+    }
+
+    query = """
+    query recentSubmissionList($username: String!) {
+      recentSubmissionList(username: $username, limit: 5) {
+        timestamp
+        statusDisplay
+        title
+      }
+    }
+    """
+
+    payload = {
+        "query": query,
+        "variables": {"username": username}
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
 
     if response.status_code != 200:
+        print("❌ Failed to fetch data from LeetCode GraphQL.")
         return False
 
-    data = response.json()
-    last_submission_time = data.get('lastSubmission', None)
-    if not last_submission_time:
-        return False
+    submissions = response.json()["data"]["recentSubmissionList"]
+    today = datetime.now(ZoneInfo("Asia/Kolkata")).date()
 
-    # Parse and compare dates
-    utc_now = datetime.now(ZoneInfo("UTC")).date()
-    submitted_date = datetime.strptime(last_submission_time, "%Y-%m-%dT%H:%M:%S.%fZ").date()
+    for sub in submissions:
+        sub_time = datetime.fromtimestamp(sub["timestamp"], ZoneInfo("Asia/Kolkata")).date()
+        if sub_time == today:
+            return True  # Found at least one submission today
 
-    return submitted_date == utc_now
+    return False
 
-# Function to send message via Telegram
 def send_telegram_message(message):
-    payload = {"chat_id": chat_id, "text": message}
     try:
-        requests.post(TELEGRAM_API_URL, data=payload)
+        requests.post(TELEGRAM_API_URL, data={"chat_id": chat_id, "text": message})
     except Exception as e:
-        print(f"❌ Failed to send Telegram message: {e}")
+        print(f"❌ Telegram send error: {e}")
 
 # Main logic
 if has_submitted_today(username):
     send_telegram_message(random.choice(success_messages))
 else:
     send_telegram_message(warning_message)
+# Log the current date and time for debugging
+print(f"Checked streak for {username} on {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%Y-%m-%d %H:%M:%S')}")
+# This will help in tracking when the script was last run
