@@ -79,7 +79,7 @@ You haven’t submitted on LeetCode today. Clock’s ticking! ⏰🔥
 
 ## 🧍‍♂️ Author
 
-Made by [@utkarshrajput1583](https://github.com/utkarshrajputt) to stay accountable and build cool automation.
+Made by [@utkarshrajputt](https://github.com/utkarshrajputt) to stay accountable and build cool automation.
 
 Feel free to fork and tweak. Just don’t break your streak. 😤
 
