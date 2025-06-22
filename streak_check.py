@@ -54,11 +54,15 @@ def has_submitted_today(username):
     today = datetime.now(ZoneInfo("Asia/Kolkata")).date()
 
     for sub in submissions:
-        sub_time = datetime.fromtimestamp(sub["timestamp"], ZoneInfo("Asia/Kolkata")).date()
-        if sub_time == today:
-            return True  # Found at least one submission today
+        try:
+            sub_time = datetime.fromtimestamp(int(sub["timestamp"]), ZoneInfo("Asia/Kolkata")).date()
+            if sub_time == today:
+                return True
+        except Exception as e:
+            print(f"⚠️ Failed to parse submission timestamp: {e}")
 
     return False
+
 
 def send_telegram_message(message):
     try:
