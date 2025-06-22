@@ -2,7 +2,7 @@ name: LeetCode Streak Alert
 
 on:
   schedule:
-    - cron: '15 17 * * *'  # 10:45 PM IST (5:15 PM UTC)
+    - cron: '30 16 * * *'  # 10:45 PM IST (5:15 PM UTC)
   workflow_dispatch:
 
 jobs:
