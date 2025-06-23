@@ -30,7 +30,7 @@ If you have submitted? You get some motivational praise instead. Because you ear
 
 ## 🧪 How It Works
 
-1. GitHub Action runs every day at **10:45 PM IST**
+1. GitHub Action runs every day at **10:00 PM IST**
 2. Python script checks your 5 most recent submissions
 3. If a submission is found for today:
    - 🎉 Sends motivational message
