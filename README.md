@@ -2,7 +2,7 @@
 
 > A daily reminder bot that keeps your LeetCode streak alive—or roasts you if you slack.
 
-This GitHub Action checks if you've submitted any problem on LeetCode today. If you haven't, it sends a Telegram message at **10:45 PM IST** to guilt-trip you into staying consistent.
+This GitHub Action checks if you've submitted any problem on LeetCode today. If you haven't, it sends a Telegram message at **10:15 PM IST** to guilt-trip you into staying consistent.
 
 If you have submitted? You get some motivational praise instead. Because you earned it.
 
